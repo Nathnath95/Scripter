@@ -50,6 +50,7 @@ public class RecordedScriptPage extends AppCompatActivity {
         }
         saveRecording.setOnClickListener(v -> saveRecording());
         deleteRecording.setOnClickListener(v -> deleteRecording());
+
     }
 
     private void text2speech(String text){
