@@ -56,7 +56,7 @@ public class HomePage extends AppCompatActivity {
     private boolean isRecording = false;
     private boolean isPaused = true;
     private StringBuilder transcribedText = new StringBuilder();
-    private ImageButton micButton, pauseOrPlayButton, finishButton, cancelButton, recordlinglistButton;
+    private ImageButton micButton, pauseOrPlayButton, finishButton, finish_QNA_Button, finish_AI_Button, cancelButton, recordlinglistButton, bluetoothButton;
     TextToSpeech t1;
     private TextView timeTextView;
     private Handler timerHandler = new Handler();
@@ -96,8 +96,11 @@ public class HomePage extends AppCompatActivity {
         micButton = findViewById(R.id.micButton);
         pauseOrPlayButton = findViewById(R.id.pauseOrPlayButton);
         finishButton = findViewById(R.id.finishButton);
+        finish_QNA_Button = findViewById(R.id.finish_QNA_Button);
+        finish_AI_Button = findViewById(R.id.finish_AI_Button);
         cancelButton = findViewById(R.id.cancelButton);
         recordlinglistButton = findViewById(R.id.recordlinglistButton);
+        bluetoothButton = findViewById(R.id.bluetoothButton);
 
         requestMicrophonePermission();
         setupSpeechRecognizer();
@@ -228,6 +231,8 @@ public class HomePage extends AppCompatActivity {
         updateButtonsState(true);
         recordlinglistButton.setClickable(false);
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_locked);
+        bluetoothButton.setClickable(false);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_locked);
 
         isPaused = false;
         pauseOrPlayButton.setImageResource(R.drawable.pause_button_states);
@@ -287,16 +292,17 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishRecording() {
-        if (isRecording) {
-            stopListening();
-            isRecording = false;
-        }
+        stopListening();
+        isRecording = false;
         stopTimer();
         resetTimer();
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
+
         recordlinglistButton.setClickable(true);
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
@@ -315,8 +321,11 @@ public class HomePage extends AppCompatActivity {
         resetTimer();
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
+
         recordlinglistButton.setClickable(true);
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
     }
 
     private void updateButtonsState(boolean isEnabled) {
@@ -325,6 +334,12 @@ public class HomePage extends AppCompatActivity {
 
         finishButton.setClickable(isEnabled);
         finishButton.setImageResource(isEnabled ? R.drawable.finish_button_states : R.drawable.finish_button_locked);
+
+        finish_AI_Button.setClickable(isEnabled);
+        finish_AI_Button.setImageResource(isEnabled ? R.drawable.finish_ai_button_states : R.drawable.finish_ai_button_locked);
+
+        finish_QNA_Button.setClickable(isEnabled);
+        finish_QNA_Button.setImageResource(isEnabled ? R.drawable.finish_qna_button_states : R.drawable.finish_qna_button_locked);
 
         cancelButton.setClickable(isEnabled);
         cancelButton.setImageResource(isEnabled ? R.drawable.cancel_button_states : R.drawable.cancel_button_locked);
