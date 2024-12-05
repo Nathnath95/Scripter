@@ -78,6 +78,7 @@ public class RecordedScriptPage extends AppCompatActivity {
                     fos.write(scriptText.getBytes());
                     fos.close();
 
+                    Log.d("Test", directory + recordingNameText);
                     Toast.makeText(this, "Recording saved!", Toast.LENGTH_SHORT).show();
 
                     ImageView imageView4 = findViewById(R.id.imageView4);

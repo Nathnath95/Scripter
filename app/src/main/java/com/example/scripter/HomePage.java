@@ -109,6 +109,8 @@ public class HomePage extends AppCompatActivity {
         micButton.setOnClickListener(v -> toggleMic());
         pauseOrPlayButton.setOnClickListener(v -> togglePause());
         finishButton.setOnClickListener(v -> finishRecording());
+        finish_QNA_Button.setOnClickListener(v -> finishQNARecording());
+        finish_AI_Button.setOnClickListener(v -> finishAIRecording());
         cancelButton.setOnClickListener(v -> cancelRecording());
 
         timeTextView = findViewById(R.id.timeTextView);
@@ -120,7 +122,7 @@ public class HomePage extends AppCompatActivity {
 
         updateButtonsState(false);
         enableMethod();
-        companionDevice();
+        bluetoothClick();
     }
 
     private void setupInitialRecognizer() {
@@ -173,6 +175,15 @@ public class HomePage extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSION_CODE);
         }
+    }
+
+    public void bluetoothClick(){
+        bluetoothButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                companionDevice();
+            }
+        });
     }
 
     private void setupSpeechRecognizer() {
@@ -292,6 +303,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishRecording() {
+        String prompt = "Generate me a 2 sentences based on this: ";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -309,7 +321,53 @@ public class HomePage extends AppCompatActivity {
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(finalText);
+            modelCall(prompt ,finalText);
+        }, 5000);
+    }
+
+    private void finishQNARecording() {
+        String prompt = "Generate me a QNA based on this: ";
+        stopListening();
+        isRecording = false;
+        stopTimer();
+        resetTimer();
+        micButton.setImageResource(R.drawable.mic_button_off);
+        updateButtonsState(false);
+
+        recordlinglistButton.setClickable(true);
+        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+
+        Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
+
+        new android.os.Handler().postDelayed(() -> {
+            String finalText = transcribedText.toString();
+            Log.d("Text", finalText);
+            modelCall(prompt ,finalText);
+        }, 5000);
+    }
+
+    private void finishAIRecording() {
+        String prompt = "Generate me AI sentences based on this: ";
+        stopListening();
+        isRecording = false;
+        stopTimer();
+        resetTimer();
+        micButton.setImageResource(R.drawable.mic_button_off);
+        updateButtonsState(false);
+
+        recordlinglistButton.setClickable(true);
+        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+
+        Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
+
+        new android.os.Handler().postDelayed(() -> {
+            String finalText = transcribedText.toString();
+            Log.d("Text", finalText);
+            modelCall(prompt ,finalText);
         }, 5000);
     }
 
@@ -405,7 +463,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     // Api
-    public void modelCall(String text) {
+    public void modelCall(String text, String prompt) {
         // Specify a Gemini model appropriate for your use case
         GenerativeModel gm =
                 new GenerativeModel(
@@ -413,7 +471,7 @@ public class HomePage extends AppCompatActivity {
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content =
-                new Content.Builder().addText("Generate me a 2 sentences based on this: " + text).build();
+                new Content.Builder().addText(prompt + text).build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
