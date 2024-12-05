@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.constraintlayout)
 
     implementation(libs.firebase.auth)
+    implementation(libs.ripple)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

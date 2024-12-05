@@ -48,20 +48,16 @@
         app:layout_constraintVertical_bias="0.561"
         app:srcCompat="@drawable/recording_script_background" />
 
-    <TextView
-        android:id="@+id/recordingScript"
-        android:layout_width="274dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:text="RECORDINGS"
-        android:textColor="@color/white"
-        android:textSize="21sp"
+    <ImageView
+        android:id="@+id/recordingText"
+        android:layout_width="288dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:srcCompat="@drawable/recordings_text" />
 
     <ListView
         android:id="@+id/recordingListView"

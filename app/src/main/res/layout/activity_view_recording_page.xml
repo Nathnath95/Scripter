@@ -37,14 +37,15 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="323dp"
-        android:layout_height="376dp"
-        android:scaleType="fitCenter"
+        android:layout_width="311dp"
+        android:layout_height="457dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.174"
+        app:layout_constraintVertical_bias="0.112"
         app:srcCompat="@drawable/recording_script_background" />
 
     <ImageView
@@ -61,11 +62,11 @@
 
     <EditText
         android:id="@+id/recordingNameTextView"
-        android:layout_width="302dp"
-        android:layout_height="35dp"
+        android:layout_width="257dp"
+        android:layout_height="40dp"
+        android:cursorVisible="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:cursorVisible="false"
         android:gravity="top|start"
         android:justificationMode="inter_word"
         android:scrollbars="vertical"
@@ -74,19 +75,18 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintEnd_toStartOf="@+id/editRecordingName"
+        app:layout_constraintHorizontal_bias="0.705"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.458" />
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/scriptTextView"
-        android:layout_width="302dp"
-        android:layout_height="333dp"
+        android:layout_width="284dp"
+        android:layout_height="376dp"
+        android:cursorVisible="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:cursorVisible="false"
         android:gravity="top|start"
         android:justificationMode="inter_word"
         android:scrollbars="vertical"
@@ -96,7 +96,50 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.746" />
+
+    <ImageButton
+        android:id="@+id/editRecordingName"
+        android:layout_width="43dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:onClick="editRecordingName"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.533"
+        app:srcCompat="@drawable/edit_button_states" />
+
+    <ImageButton
+        android:id="@+id/editRecordingScript"
+        android:layout_width="43dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:onClick="editRecordingScript"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:srcCompat="@drawable/edit_button_states" />
+
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="119dp"
+        android:layout_height="78dp"
+        android:background="@android:color/transparent"
+        android:onClick="playRecording"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.034"
+        app:layout_constraintStart_toStartOf="@+id/scriptTextView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.355"
+        app:srcCompat="@drawable/continue_button_states" />
 
     <ImageButton
         android:id="@+id/deleteRecording"
@@ -107,10 +150,10 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/scriptTextView"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.992"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:layout_constraintVertical_bias="0.127"
+        app:layout_constraintVertical_bias="0.173"
         app:srcCompat="@drawable/deleterecording_button_states" />
 
     <ImageButton
@@ -127,43 +170,6 @@
         app:layout_constraintTop_toBottomOf="@+id/deleteRecording"
         app:layout_constraintVertical_bias="0.213"
         app:srcCompat="@drawable/share_button_states" />
-
-    <ImageButton
-        android:id="@+id/editRecordingName"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:background="@android:color/transparent"
-        android:onClick="editRecordingName"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:srcCompat="@drawable/edit_button_states" />
-
-    <ImageButton
-        android:id="@+id/editRecordingScript"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:background="@android:color/transparent"
-        android:onClick="editRecordingScript"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="@+id/imageView3"
-        app:srcCompat="@drawable/edit_button_states" />
-
-    <ImageButton
-        android:id="@+id/playButton"
-        android:layout_width="112dp"
-        android:layout_height="71dp"
-        android:background="@android:color/transparent"
-        android:onClick="playRecording"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/scriptTextView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:layout_constraintVertical_bias="0.323"
-        app:srcCompat="@drawable/continue_button_states" />
 
     <ImageView
         android:id="@+id/imageView4"

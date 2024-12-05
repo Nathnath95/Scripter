@@ -53,7 +53,7 @@
     <EditText
         android:id="@+id/signupEmail"
         android:layout_width="308dp"
-        android:layout_height="39dp"
+        android:layout_height="55dp"
         android:backgroundTint="#BFE7E7E7"
         android:ems="10"
         android:hint="E-mail Address"
@@ -70,7 +70,7 @@
     <EditText
         android:id="@+id/signupPassword"
         android:layout_width="308dp"
-        android:layout_height="39dp"
+        android:layout_height="55dp"
         android:backgroundTint="#BFE7E7E7"
         android:ems="10"
         android:hint="Password"
@@ -87,7 +87,7 @@
     <EditText
         android:id="@+id/signupPhone"
         android:layout_width="308dp"
-        android:layout_height="39dp"
+        android:layout_height="55dp"
         android:backgroundTint="#BFE7E7E7"
         android:ems="10"
         android:hint="Phone Number"

@@ -41,6 +41,7 @@ import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -53,6 +54,8 @@ public class HomePage extends AppCompatActivity {
     private long backPressedTime;
 
     private SpeechRecognizer speechRecognizer, initialRecognizer;
+
+    RippleBackground rippleBackground;
 
     private boolean isRecording = false;
     private boolean isPaused = true;
@@ -81,6 +84,7 @@ public class HomePage extends AppCompatActivity {
 
     // String for API prompt
     private String promtText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +106,8 @@ public class HomePage extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelButton);
         recordlinglistButton = findViewById(R.id.recordlinglistButton);
         bluetoothButton = findViewById(R.id.bluetoothButton);
+
+        rippleBackground = findViewById(R.id.ripple);
 
         requestMicrophonePermission();
         setupSpeechRecognizer();
@@ -248,6 +254,8 @@ public class HomePage extends AppCompatActivity {
         isPaused = false;
         pauseOrPlayButton.setImageResource(R.drawable.pause_button_states);
 
+        rippleBackground.startRippleAnimation();
+
         startListening();
         startTimer();
     }
@@ -259,9 +267,12 @@ public class HomePage extends AppCompatActivity {
         if (isPaused) {
             stopListening();
             stopTimer();
+            rippleBackground.stopRippleAnimation();
+
         } else {
             startListening();
             startTimer();
+            rippleBackground.startRippleAnimation();
         }
     }
 
@@ -313,6 +324,8 @@ public class HomePage extends AppCompatActivity {
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
+        rippleBackground.stopRippleAnimation();
+
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
         new android.os.Handler().postDelayed(() -> {
@@ -335,6 +348,8 @@ public class HomePage extends AppCompatActivity {
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+
+        rippleBackground.stopRippleAnimation();
 
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
@@ -359,6 +374,8 @@ public class HomePage extends AppCompatActivity {
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
+        rippleBackground.stopRippleAnimation();
+
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
         new android.os.Handler().postDelayed(() -> {
@@ -374,6 +391,9 @@ public class HomePage extends AppCompatActivity {
         isRecording = false;
         stopTimer();
         resetTimer();
+
+        rippleBackground.stopRippleAnimation();
+
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
 
