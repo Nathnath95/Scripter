@@ -300,7 +300,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishRecording() {
-        String prompt = "Generate me a 2 sentences based on this: ";
+        String prompt = "Just correct grammatical errors: ";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -312,18 +312,24 @@ public class HomePage extends AppCompatActivity {
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
-
+        micButton.setClickable(false);
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(prompt, finalText);
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(HomePage.this, RecordedScriptPage.class);
+                intent.putExtra("RECORDED_SCRIPT", finalText);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
+            }, 2000);
         }, 5000);
     }
 
     private void finishQNARecording() {
-        String prompt = "Generate me a QNA based on this: ";
+        String prompt = "Please generate 5 to 10 question and answers based on the following text. The Q&A should be structured as follows:  Question: [Question text]  (space) Answer: [Answer text]  Use clear and concise language.";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -346,7 +352,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishAIRecording() {
-        String prompt = "Generate me AI sentences based on this: ";
+        String prompt = "Expound based on the discussion. The response should elaborate on the key concepts, offering additional context, explanations, examples, and insights to further elaborate on the content. Do not include any special characters like asterisks or hashtags in your response.";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -360,11 +366,11 @@ public class HomePage extends AppCompatActivity {
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
-
+        micButton.setClickable(false);
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(prompt ,finalText);
+            modelCall(prompt, finalText);
         }, 5000);
     }
 
@@ -535,6 +541,7 @@ public class HomePage extends AppCompatActivity {
             boolean isSpeaking = t1.isSpeaking();
             Log.d("Test", "TTS is speaking: " + isSpeaking);
         }
+        micButton.setClickable(true);
     }
 
     private void companionDevice(){
