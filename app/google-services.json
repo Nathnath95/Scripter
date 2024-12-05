@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "254784444409",
+    "project_id": "scripter-3f928",
+    "storage_bucket": "scripter-3f928.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254784444409:android:06d3801dee306bc2d74f28",
+        "android_client_info": {
+          "package_name": "com.example.scripter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaZxdr73Up7swrilNaAR4qIP8cKGYaYR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

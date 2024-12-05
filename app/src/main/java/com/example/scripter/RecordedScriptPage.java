@@ -21,6 +21,8 @@ import java.util.Locale;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class RecordedScriptPage extends AppCompatActivity {
     private long backPressedTime;
 
@@ -45,7 +47,7 @@ public class RecordedScriptPage extends AppCompatActivity {
         if (recordedScript != null) {
             scriptTextView.setText(recordedScript);
             String text = scriptTextView.getText().toString();
-            Log.d("Text", "SEcond");
+            Log.d("Text", "Second");
             Log.d("Text", text);
         }
         saveRecording.setOnClickListener(v -> saveRecording());
@@ -69,9 +71,10 @@ public class RecordedScriptPage extends AppCompatActivity {
         String scriptText = scriptTextView.getText().toString().trim();
         if (!recordingNameText.isEmpty() && !scriptText.isEmpty()) {
             try {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 File directory = getExternalFilesDir(null);
                 if (directory != null) {
-                    File file = new File(directory, recordingNameText + ".txt");
+                    File file = new File(directory, userId + "_" + recordingNameText + ".txt");
 
                     FileOutputStream fos = new FileOutputStream(file);
                     fos.write(scriptText.getBytes());

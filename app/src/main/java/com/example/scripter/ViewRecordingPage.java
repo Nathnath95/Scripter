@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -61,6 +63,7 @@ public class ViewRecordingPage extends AppCompatActivity {
             Toast.makeText(this, "No recording selected!", Toast.LENGTH_SHORT).show();
             finish();
         }
+
         String script = getIntent().getStringExtra("SCRIPT");
 
         if (recordingName != null) {
@@ -74,19 +77,16 @@ public class ViewRecordingPage extends AppCompatActivity {
             if (i != TextToSpeech.ERROR){
                 t1.setLanguage(Locale.CANADA);
             } else {
-                Toast.makeText(this, "TextToSpeech initializaiton failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "TextToSpeech initialization failed!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (t1 != null) {
-                    Log.d("Text", "Play clicked");
-                    t1.speak(scriptTextView.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-                } else {
-                    Log.d("Text", "Not initialized");
-                }
+        playButton.setOnClickListener(view -> {
+            if (t1 != null) {
+                Log.d("Text", "Play clicked");
+                t1.speak(scriptTextView.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            } else {
+                Log.d("Text", "Not initialized");
             }
         });
     }
@@ -94,7 +94,9 @@ public class ViewRecordingPage extends AppCompatActivity {
     private String readRecordingFromFile(String recordingName) {
         File directory = getExternalFilesDir(null);
         if (directory != null) {
-            File file = new File(directory, recordingName + ".txt");
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();  // Get current user's UID
+            File file = new File(directory, userId + "_" + recordingName + ".txt");  // Include UID in the file name
+
             if (file.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     StringBuilder content = new StringBuilder();
@@ -111,38 +113,15 @@ public class ViewRecordingPage extends AppCompatActivity {
         return null;
     }
 
-    private void text2speech(String text){
-        t1 = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int i) {
-                if (i != TextToSpeech.ERROR)
-                    t1.setLanguage(Locale.CANADA);
-            }
-        });
-
-        t1.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-    }
-
     private void deleteRecording(String recordingName) {
         File directory = getExternalFilesDir(null);
         if (directory != null) {
-            File file = new File(directory, recordingName + ".txt");
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            File file = new File(directory, userId + "_" + recordingName + ".txt");
             if (file.exists() && file.delete()) {
                 Toast.makeText(this, "Recording deleted successfully!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Failed to delete recording!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void playRecording(String recordingName) {
-        File directory = getExternalFilesDir(null);
-        if (directory != null) {
-            File file = new File(directory, recordingName + ".txt");
-            if (file.exists() && file.delete()) {
-                Toast.makeText(this, "Recording Played successfully!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Failed to play recording!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -186,7 +165,6 @@ public class ViewRecordingPage extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         if (!isEditingRecordingName) {
-
             editRecordingScript.setImageResource(R.drawable.save_edit_button_locked);
             editRecordingScript.setClickable(false);
 
@@ -197,8 +175,7 @@ public class ViewRecordingPage extends AppCompatActivity {
             recordingNameTextView.requestFocus();
             imm.showSoftInput(recordingNameTextView, InputMethodManager.SHOW_IMPLICIT);
             editRecordingName.setImageResource(R.drawable.save_edit_button_states);
-        }
-        else {
+        } else {
             isEditingRecordingName = false;
             recordingNameTextView.setFocusable(false);
             recordingNameTextView.setFocusableInTouchMode(false);
@@ -211,8 +188,8 @@ public class ViewRecordingPage extends AppCompatActivity {
 
             if (!updatedName.equals(originalName)) {
                 File directory = getExternalFilesDir(null);
-                File originalFile = new File(directory, originalName + ".txt");
-                File updatedFile = new File(directory, updatedName + ".txt");
+                File originalFile = new File(directory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + originalName + ".txt");  //
+                File updatedFile = new File(directory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + updatedName + ".txt");
 
                 if (originalFile.exists()) {
                     boolean renamed = originalFile.renameTo(updatedFile);
@@ -222,17 +199,14 @@ public class ViewRecordingPage extends AppCompatActivity {
                         String updatedScript = scriptTextView.getText().toString();
                         try (FileWriter writer = new FileWriter(updatedFile, false)) {
                             writer.write(updatedScript);
-//                            Toast.makeText(this, "Recording script updated successfully!", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
-//                            Toast.makeText(this, "Failed to update recording script!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(this, "Failed to update recording name!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-
             editRecordingScript.setImageResource(R.drawable.edit_button_states);
             editRecordingScript.setClickable(true);
         }
@@ -242,7 +216,6 @@ public class ViewRecordingPage extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         if (!isEditingRecordingScript) {
-
             editRecordingName.setImageResource(R.drawable.save_edit_button_locked);
             editRecordingName.setClickable(false);
 
@@ -262,39 +235,24 @@ public class ViewRecordingPage extends AppCompatActivity {
             imm.hideSoftInputFromWindow(scriptTextView.getWindowToken(), 0);
 
             String updatedScript = scriptTextView.getText().toString();
-            String recordingName = getIntent().getStringExtra("RECORDING_NAME");
+            String recordingName = recordingNameTextView.getText().toString();
 
-            if (recordingName != null) {
-                File directory = getExternalFilesDir(null);
-                File file = new File(directory, recordingName + ".txt");
+            File directory = getExternalFilesDir(null);
+            if (directory != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                File file = new File(directory, userId + "_" + recordingName + ".txt");
 
-                try (FileWriter writer = new FileWriter(file, false)) {
-                    writer.write(updatedScript);
-                    Toast.makeText(this, "Recording script updated successfully!", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Failed to update recording script!", Toast.LENGTH_SHORT).show();
+                if (file.exists()) {
+                    try (FileWriter writer = new FileWriter(file, false)) {
+                        writer.write(updatedScript);
+                        Toast.makeText(this, "Recording script updated successfully!", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
             editRecordingName.setImageResource(R.drawable.edit_button_states);
             editRecordingName.setClickable(true);
         }
-    }
-
-    public void shareRecording(View view) {
-        // BLUETOOTH FILE TRANSFER GOES HERE
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(backPressedTime+3000>System.currentTimeMillis()){
-            super.onBackPressed();
-            finish();
-        }
-        else{
-            Toast.makeText(this,"Press back again to exit",Toast.LENGTH_SHORT).show();
-        }
-        backPressedTime=System.currentTimeMillis();
     }
 }

@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class RecordingListPage extends AppCompatActivity {
     private long backPressedTime;
 
@@ -34,17 +36,16 @@ public class RecordingListPage extends AppCompatActivity {
         recordingNames = new ArrayList<>();
         loadRecordingsFromFiles();
 
-        adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                recordingNames
-        );
-
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recordingNames);
         recordingListView.setAdapter(adapter);
 
         recordingListView.setOnItemClickListener((parent, view, position, id) -> {
             String recordingName = adapter.getItem(position);
             if (recordingName != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String fileName = userId + "_" + recordingName + ".txt";
+                File file = new File(getExternalFilesDir(null), fileName);
+
                 ImageView imageView4 = findViewById(R.id.imageView4);
                 ImageView imageView5 = findViewById(R.id.imageView5);
 
@@ -63,11 +64,13 @@ public class RecordingListPage extends AppCompatActivity {
                 }, 1000);
 
                 new Handler().postDelayed(() -> {
-                    Intent intent = new Intent(RecordingListPage.this, ViewRecordingPage.class);
-                    intent.putExtra("RECORDING_NAME", recordingName);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
+                    if (file.exists()) {
+                        Intent intent = new Intent(RecordingListPage.this, ViewRecordingPage.class);
+                        intent.putExtra("RECORDING_NAME", recordingName);
+                        startActivity(intent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        finish();
+                    }
                 }, 1800);
             }
         });
@@ -78,9 +81,12 @@ public class RecordingListPage extends AppCompatActivity {
         if (directory != null) {
             File[] files = directory.listFiles((dir, name) -> name.endsWith(".txt"));
             if (files != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 for (File file : files) {
-                    String recordingName = file.getName().replace(".txt", "");
-                    recordingNames.add(recordingName);
+                    if (file.getName().startsWith(userId)) {
+                        String recordingName = file.getName().replace(userId + "_", "").replace(".txt", "");
+                        recordingNames.add(recordingName);
+                    }
                 }
             } else {
                 Toast.makeText(this, "No recordings found!", Toast.LENGTH_SHORT).show();

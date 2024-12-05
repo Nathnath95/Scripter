@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/register_forgotpass_page" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/registerButton"
         android:layout_width="195dp"
         android:layout_height="46dp"
         android:background="@android:color/transparent"
@@ -29,9 +29,10 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.701"
+        app:layout_constraintTop_toBottomOf="@+id/signupPhone"
+        app:layout_constraintVertical_bias="0.376"
         app:srcCompat="@drawable/register_button_states" />
 
     <ImageButton
@@ -50,13 +51,13 @@
         app:srcCompat="@drawable/back_button_states" />
 
     <EditText
-        android:id="@+id/signupUsername"
+        android:id="@+id/signupEmail"
         android:layout_width="308dp"
         android:layout_height="39dp"
         android:backgroundTint="#BFE7E7E7"
         android:ems="10"
-        android:hint="Username"
-        android:inputType="text"
+        android:hint="E-mail Address"
+        android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
         android:textColorHint="#8A8A8A"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -84,23 +85,6 @@
         app:layout_constraintVertical_bias="0.35" />
 
     <EditText
-        android:id="@+id/signupEmail"
-        android:layout_width="308dp"
-        android:layout_height="39dp"
-        android:backgroundTint="#BFE7E7E7"
-        android:ems="10"
-        android:hint="E-mail Address"
-        android:inputType="textEmailAddress"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#8A8A8A"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
-
-    <EditText
         android:id="@+id/signupPhone"
         android:layout_width="308dp"
         android:layout_height="39dp"
@@ -115,8 +99,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/signupPhone"-->
+<!--        android:layout_width="308dp"-->
+<!--        android:layout_height="39dp"-->
+<!--        android:backgroundTint="#BFE7E7E7"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Phone Number"-->
+<!--        android:inputType="phone"-->
+<!--        android:maxLength="11"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:textColorHint="#8A8A8A"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.495"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/imageView"-->
+<!--        app:layout_constraintVertical_bias="0.55" />-->
 
     <ImageView
         android:id="@+id/imageView2"
