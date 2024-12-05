@@ -155,6 +155,7 @@
         android:layout_width="112dp"
         android:layout_height="71dp"
         android:background="@android:color/transparent"
+        android:onClick="playRecording"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

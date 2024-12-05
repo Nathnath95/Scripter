@@ -2,9 +2,16 @@ package com.example.scripter;
 
 import android.Manifest;
 import android.app.MediaRouteButton;
+import android.bluetooth.BluetoothAdapter;
+import android.companion.AssociationRequest;
+import android.companion.BluetoothDeviceFilter;
+import android.companion.CompanionDeviceManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +52,8 @@ public class HomePage extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 1;
     private long backPressedTime;
 
-    private SpeechRecognizer speechRecognizer;
+    private SpeechRecognizer speechRecognizer, initialRecognizer;
+
     private boolean isRecording = false;
     private boolean isPaused = true;
     private StringBuilder transcribedText = new StringBuilder();
@@ -53,6 +61,7 @@ public class HomePage extends AppCompatActivity {
     TextToSpeech t1;
     private TextView timeTextView;
     private Handler timerHandler = new Handler();
+    private Handler recordingHandler = new Handler();
     private int seconds = 0;
     private boolean isTimerRunning = false;
     private Runnable timerRunnable = new Runnable() {
@@ -64,6 +73,11 @@ public class HomePage extends AppCompatActivity {
             }
         }
     };
+
+    //Bluetooth stuff
+    BluetoothAdapter myBluetoothAdapter;
+    Intent btEnablingIntent;
+    int requestCodeForEnable;
 
     // String for API prompt
     private String promtText;
@@ -80,31 +94,6 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        MediaSession mediaSession = new MediaSession(this, "MyMediaSession");
-        mediaSession.setCallback(new MediaSession.Callback() {
-            @Override
-            public boolean onMediaButtonEvent(@NonNull Intent mediaButtonIntent) {
-                if (Intent.ACTION_MEDIA_BUTTON.equals(mediaButtonIntent.getAction())){
-                    KeyEvent event = mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                    if (event != null && event.getAction() == KeyEvent.ACTION_DOWN){
-                        int keyCode = event.getKeyCode();
-                        switch (keyCode){
-                            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                                Log.d("Text", "Play pressed");
-                                break;
-                            case KeyEvent.KEYCODE_MEDIA_NEXT:
-                                Log.d("Text", "Next pressed");
-                                break;
-                            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                                Log.d("Text", "Previous pressed");
-                                break;
-                        }
-                    }
-                }
-                return super.onMediaButtonEvent(mediaButtonIntent);
-            }
-        });
-        mediaSession.setActive(true);
         micButton = findViewById(R.id.micButton);
         pauseOrPlayButton = findViewById(R.id.pauseOrPlayButton);
         finishButton = findViewById(R.id.finishButton);
@@ -116,18 +105,68 @@ public class HomePage extends AppCompatActivity {
 
         requestMicrophonePermission();
         setupSpeechRecognizer();
+        setupInitialRecognizer();
 
         micButton.setOnClickListener(v -> toggleMic());
         pauseOrPlayButton.setOnClickListener(v -> togglePause());
         finishButton.setOnClickListener(v -> finishRecording());
+        finish_QNA_Button.setOnClickListener(v -> finishQNARecording());
+        finish_AI_Button.setOnClickListener(v -> finishAIRecording());
         cancelButton.setOnClickListener(v -> cancelRecording());
 
         timeTextView = findViewById(R.id.timeTextView);
 
-        // Headphone buttons stuff
-
+        myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        btEnablingIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        requestCodeForEnable = 1;
 
         updateButtonsState(false);
+        enableMethod();
+        Log.d("Hello", "Click reached");
+        bluetoothClick();
+    }
+
+    private void setupInitialRecognizer() {
+        initialRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        initialRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {}
+            @Override
+            public void onBeginningOfSpeech() {}
+            @Override
+            public void onRmsChanged(float v) {}
+            @Override
+            public void onBufferReceived(byte[] bytes) {}
+            @Override
+            public void onEndOfSpeech() {}
+            @Override
+            public void onError(int i) {
+                startInitialListening();
+            }
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null && !matches.isEmpty()) {
+                    String spokenText = matches.get(0).toLowerCase(Locale.ROOT);
+                    if (spokenText.contains("yes")) {
+                        toggleMic(); // Call the toggleMic function when "Yes" is detected
+                    }             // Release the recognizer after usage
+                }
+            }
+
+            @Override
+            public void onPartialResults(Bundle bundle) {}
+            @Override
+            public void onEvent(int i, Bundle bundle) {}
+        });
+        startInitialListening(); // Start listening immediately
+    }
+
+    private void startInitialListening() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        initialRecognizer.startListening(intent);
     }
 
     private void requestMicrophonePermission() {
@@ -136,6 +175,16 @@ public class HomePage extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSION_CODE);
         }
+    }
+
+    public void bluetoothClick(){
+        bluetoothButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Hello", "Clicked");
+                companionDevice();
+            }
+        });
     }
 
     private void setupSpeechRecognizer() {
@@ -182,6 +231,10 @@ public class HomePage extends AppCompatActivity {
         if (isRecording) {
             return;
         }
+        initialRecognizer.stopListening();
+        initialRecognizer.destroy();
+        initialRecognizer = null;
+
         transcribedText.setLength(0);
         isRecording = true;
         micButton.setImageResource(R.drawable.mic_button_on);
@@ -194,6 +247,7 @@ public class HomePage extends AppCompatActivity {
 
         isPaused = false;
         pauseOrPlayButton.setImageResource(R.drawable.pause_button_states);
+
         startListening();
         startTimer();
     }
@@ -211,12 +265,33 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
+    // Bluetooth on method
+    private void enableMethod() {
+        if (ActivityCompat.checkSelfPermission(HomePage.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // Request required permissions
+            ActivityCompat.requestPermissions(
+                    HomePage.this,
+                    new String[]{android.Manifest.permission.BLUETOOTH_CONNECT, android.Manifest.permission.BLUETOOTH_SCAN},
+                    1 // PERMISSION_REQUEST_CODE
+            );
+            return; // Exit to wait for user action
+        }
+
+        if (myBluetoothAdapter == null) {
+            Toast.makeText(getApplicationContext(), "Bluetooth not supported", Toast.LENGTH_LONG).show();
+        } else {
+            if (!myBluetoothAdapter.isEnabled()) {
+                startActivityForResult(btEnablingIntent, requestCodeForEnable);
+            }
+        }
+    }
+
     private void startListening() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-
+        Log.d("Text", "I am recording");
         speechRecognizer.startListening(intent);
     }
 
@@ -225,6 +300,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishRecording() {
+        String prompt = "Generate me a 2 sentences based on this: ";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -242,7 +318,53 @@ public class HomePage extends AppCompatActivity {
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(finalText);
+            modelCall(prompt, finalText);
+        }, 5000);
+    }
+
+    private void finishQNARecording() {
+        String prompt = "Generate me a QNA based on this: ";
+        stopListening();
+        isRecording = false;
+        stopTimer();
+        resetTimer();
+        micButton.setImageResource(R.drawable.mic_button_off);
+        updateButtonsState(false);
+
+        recordlinglistButton.setClickable(true);
+        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+
+        Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
+
+        new android.os.Handler().postDelayed(() -> {
+            String finalText = transcribedText.toString();
+            Log.d("Text", finalText);
+            modelCall(prompt ,finalText);
+        }, 5000);
+    }
+
+    private void finishAIRecording() {
+        String prompt = "Generate me AI sentences based on this: ";
+        stopListening();
+        isRecording = false;
+        stopTimer();
+        resetTimer();
+        micButton.setImageResource(R.drawable.mic_button_off);
+        updateButtonsState(false);
+
+        recordlinglistButton.setClickable(true);
+        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
+        bluetoothButton.setClickable(true);
+        bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+
+        Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
+
+        new android.os.Handler().postDelayed(() -> {
+            String finalText = transcribedText.toString();
+            Log.d("Text", finalText);
+            modelCall(prompt ,finalText);
         }, 5000);
     }
 
@@ -282,6 +404,9 @@ public class HomePage extends AppCompatActivity {
     protected void onDestroy() {
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
+        }
+        if (initialRecognizer != null) {
+            initialRecognizer.destroy();
         }
         super.onDestroy();
     }
@@ -335,7 +460,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     // Api
-    public void modelCall(String text) {
+    public void modelCall(String text, String prompt) {
         // Specify a Gemini model appropriate for your use case
         GenerativeModel gm =
                 new GenerativeModel(
@@ -343,7 +468,7 @@ public class HomePage extends AppCompatActivity {
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content =
-                new Content.Builder().addText("Generate me a 2 sentences based on this: " + text).build();
+                new Content.Builder().addText(prompt + text).build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -390,6 +515,56 @@ public class HomePage extends AppCompatActivity {
                     },
                     this.getMainExecutor());
         }
+    }
+
+    private void companionDevice(){
+        // Companion Device Trial
+        CompanionDeviceManager deviceManager =
+                null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            deviceManager = (CompanionDeviceManager) getSystemService(
+                    Context.COMPANION_DEVICE_SERVICE
+            );
+        }
+
+        BluetoothDeviceFilter deviceFilter =
+                null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            deviceFilter = new BluetoothDeviceFilter.Builder()
+                    .build();
+        }
+        Log.d("Hello", "This even companion runninh?");
+
+        AssociationRequest pairingRequest = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pairingRequest = new AssociationRequest.Builder()
+                    .addDeviceFilter(deviceFilter)
+                    .setSingleDevice(false)
+                    .build();
+        }
+        Log.d("Hello", "pairing not reached");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            deviceManager.associate(pairingRequest, new CompanionDeviceManager.Callback() {
+                @Override
+                public void onDeviceFound(IntentSender chooserLauncher) {
+                    try {
+                        Log.d("Hello", "device found");
+
+                        startIntentSenderForResult(chooserLauncher,
+                                0, null, 0, 0, 0);
+                    } catch (IntentSender.SendIntentException e) {
+                        Log.e("Hello", "Error launching intent for pairing", e);
+                    }
+                }
+
+                @Override
+                public void onFailure(CharSequence error) {
+                    Log.e("Hello", "Failed to find companion device: " + error);
+                }
+            }, null);
+        }
+        // End of companion trial
     }
 
     public void back(View view) {

@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
 public class ForgetPasswordPage extends AppCompatActivity {
     private long backPressedTime;
     private FirebaseAuth Auth;

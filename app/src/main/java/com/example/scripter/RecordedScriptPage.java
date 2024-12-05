@@ -3,6 +3,7 @@ package com.example.scripter;
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -75,10 +76,17 @@ public class RecordedScriptPage extends AppCompatActivity {
                 File directory = getExternalFilesDir(null);
                 if (directory != null) {
                     File file = new File(directory, userId + "_" + recordingNameText + ".txt");
+                    File file_to_download = new File(Environment.getExternalStorageDirectory(), "Download/" + userId + "_" + recordingNameText + ".txt");
+
 
                     FileOutputStream fos = new FileOutputStream(file);
                     fos.write(scriptText.getBytes());
                     fos.close();
+                    Log.d("Test", directory + recordingNameText);
+
+                    FileOutputStream fts = new FileOutputStream(file_to_download);
+                    fts.write(scriptText.getBytes());
+                    fts.close();
 
                     Toast.makeText(this, "Recording saved!", Toast.LENGTH_SHORT).show();
 
