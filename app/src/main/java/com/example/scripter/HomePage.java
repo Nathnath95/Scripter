@@ -41,7 +41,6 @@ import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -54,8 +53,6 @@ public class HomePage extends AppCompatActivity {
     private long backPressedTime;
 
     private SpeechRecognizer speechRecognizer, initialRecognizer;
-
-    RippleBackground rippleBackground;
 
     private boolean isRecording = false;
     private boolean isPaused = true;
@@ -84,7 +81,6 @@ public class HomePage extends AppCompatActivity {
 
     // String for API prompt
     private String promtText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +102,6 @@ public class HomePage extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelButton);
         recordlinglistButton = findViewById(R.id.recordlinglistButton);
         bluetoothButton = findViewById(R.id.bluetoothButton);
-
-        rippleBackground = findViewById(R.id.ripple);
 
         requestMicrophonePermission();
         setupSpeechRecognizer();
@@ -254,8 +248,6 @@ public class HomePage extends AppCompatActivity {
         isPaused = false;
         pauseOrPlayButton.setImageResource(R.drawable.pause_button_states);
 
-        rippleBackground.startRippleAnimation();
-
         startListening();
         startTimer();
     }
@@ -267,12 +259,9 @@ public class HomePage extends AppCompatActivity {
         if (isPaused) {
             stopListening();
             stopTimer();
-            rippleBackground.stopRippleAnimation();
-
         } else {
             startListening();
             startTimer();
-            rippleBackground.startRippleAnimation();
         }
     }
 
@@ -311,7 +300,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishRecording() {
-        String prompt = "Generate me a 2 sentences based on this: ";
+        String prompt = "Just correct grammatical errors: ";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -323,20 +312,24 @@ public class HomePage extends AppCompatActivity {
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
-
-        rippleBackground.stopRippleAnimation();
-
+        micButton.setClickable(false);
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(prompt, finalText);
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(HomePage.this, RecordedScriptPage.class);
+                intent.putExtra("RECORDED_SCRIPT", finalText);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
+            }, 2000);
         }, 5000);
     }
 
     private void finishQNARecording() {
-        String prompt = "Generate me a QNA based on this: ";
+        String prompt = "Please generate 5 to 10 question and answers based on the following text. The Q&A should be structured as follows:  Question: [Question text]  (space) Answer: [Answer text]  Use clear and concise language.";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -348,8 +341,6 @@ public class HomePage extends AppCompatActivity {
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
-
-        rippleBackground.stopRippleAnimation();
 
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
@@ -361,7 +352,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void finishAIRecording() {
-        String prompt = "Generate me AI sentences based on this: ";
+        String prompt = "Expound based on the discussion. The response should elaborate on the key concepts, offering additional context, explanations, examples, and insights to further elaborate on the content. Do not include any special characters like asterisks or hashtags in your response.";
         stopListening();
         isRecording = false;
         stopTimer();
@@ -374,14 +365,12 @@ public class HomePage extends AppCompatActivity {
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
-        rippleBackground.stopRippleAnimation();
-
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
-
+        micButton.setClickable(false);
         new android.os.Handler().postDelayed(() -> {
             String finalText = transcribedText.toString();
             Log.d("Text", finalText);
-            modelCall(prompt ,finalText);
+            modelCall(prompt, finalText);
         }, 5000);
     }
 
@@ -391,9 +380,6 @@ public class HomePage extends AppCompatActivity {
         isRecording = false;
         stopTimer();
         resetTimer();
-
-        rippleBackground.stopRippleAnimation();
-
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
 
@@ -520,7 +506,7 @@ public class HomePage extends AppCompatActivity {
                             new Handler().postDelayed(() -> {
                                 Intent intent = new Intent(HomePage.this, RecordedScriptPage.class);
                                 Log.d("Text", promtText);
-                                t1.speak(promtText, TextToSpeech.QUEUE_FLUSH, null);
+                                //t1.speak(promtText, TextToSpeech.QUEUE_FLUSH, null);
                                 intent.putExtra("RECORDED_SCRIPT", promtText);
                                 startActivity(intent);
                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -535,6 +521,27 @@ public class HomePage extends AppCompatActivity {
                     },
                     this.getMainExecutor());
         }
+    }
+
+
+    public void stopSpeaking() {
+        if (t1 != null && t1.isSpeaking()) {
+            Log.d("Test", "Stopping TTS playback...");
+            t1.stop();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Test", "Resumed");
+        stopSpeaking();
+        t1.stop();
+        if (t1 != null) {
+            boolean isSpeaking = t1.isSpeaking();
+            Log.d("Test", "TTS is speaking: " + isSpeaking);
+        }
+        micButton.setClickable(true);
     }
 
     private void companionDevice(){
@@ -602,6 +609,7 @@ public class HomePage extends AppCompatActivity {
             finish();
         }, 1000);
     }
+
 
     @Override
     public void onBackPressed() {
