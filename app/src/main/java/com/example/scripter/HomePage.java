@@ -356,6 +356,7 @@ public class HomePage extends AppCompatActivity {
 
         rippleBackground.stopRippleAnimation();
 
+        micButton.setClickable(false);
         Toast.makeText(this, "Processing... Please wait.", Toast.LENGTH_SHORT).show();
 
         new android.os.Handler().postDelayed(() -> {

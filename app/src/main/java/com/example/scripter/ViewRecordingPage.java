@@ -402,6 +402,12 @@ public class ViewRecordingPage extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        t1.stop();
+    }
+
+    @Override
     public void onBackPressed() {
         if(backPressedTime+3000>System.currentTimeMillis()){
             super.onBackPressed();
