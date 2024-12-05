@@ -500,7 +500,7 @@ public class HomePage extends AppCompatActivity {
                             new Handler().postDelayed(() -> {
                                 Intent intent = new Intent(HomePage.this, RecordedScriptPage.class);
                                 Log.d("Text", promtText);
-                                t1.speak(promtText, TextToSpeech.QUEUE_FLUSH, null);
+                                //t1.speak(promtText, TextToSpeech.QUEUE_FLUSH, null);
                                 intent.putExtra("RECORDED_SCRIPT", promtText);
                                 startActivity(intent);
                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -514,6 +514,26 @@ public class HomePage extends AppCompatActivity {
                         }
                     },
                     this.getMainExecutor());
+        }
+    }
+
+
+    public void stopSpeaking() {
+        if (t1 != null && t1.isSpeaking()) {
+            Log.d("Test", "Stopping TTS playback...");
+            t1.stop();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Test", "Resumed");
+        stopSpeaking();
+        t1.stop();
+        if (t1 != null) {
+            boolean isSpeaking = t1.isSpeaking();
+            Log.d("Test", "TTS is speaking: " + isSpeaking);
         }
     }
 
@@ -582,6 +602,7 @@ public class HomePage extends AppCompatActivity {
             finish();
         }, 1000);
     }
+
 
     @Override
     public void onBackPressed() {
