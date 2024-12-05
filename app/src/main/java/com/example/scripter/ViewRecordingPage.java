@@ -111,16 +111,16 @@ public class ViewRecordingPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Logic to send the file
-                if (bluetoothSocket != null && bluetoothSocket.isConnected() && checkPermission()) {
+                if (checkPermission()) {
 
-
+                    String file_name = recordingName + ".txt";
+                    Log.d("Test", file_name);
                     // Hardcoded file path
-                    File file = new File(Environment.getExternalStorageDirectory(), "Download/Untitleddocument.pdf");
+                    File file = new File(Environment.getExternalStorageDirectory(), "Download/" + file_name);
 
                     if (file.exists()) {
                         // Use FileProvider to get a content URI
-                        Uri fileUri = FileProvider.getUriForFile(ViewRecordingPage.this, "com.yourapp.fileprovider", file);
-
+                        Uri fileUri = FileProvider.getUriForFile(ViewRecordingPage.this, "com.example.scripter.fileprovider", file);
                         // Intent to send the file
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("application/pdf");
