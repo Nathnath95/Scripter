@@ -1,52 +1,90 @@
-# SCRIPTER✒️
+# SCRIPTER✒️  
+
 Scripter is your all-in-one Android application designed to transform your spoken words into meaningful and organized text. From transcription to study material creation, Scripter leverages cutting-edge technology to offer a seamless speech-to-text experience, along with tools to enhance learning, communication, and accessibility.
 
 ---
 
-## OVERVIEW🚩
-Scripter is an Android application that utilizes a microphone feature to recognize user speech. WIth Scripter, users can transcribe audio, expand information, and generate questions and answers based on the recorded speech.
+## OVERVIEW🚩  
+
+Scripter is an innovative Android app that uses speech recognition technology to transcribe audio into text. Whether you are a student needing to take quick notes, someone aiming to create detailed summaries, or an individual looking to enhance accessibility, Scripter has got you covered. With features like information expansion, AI-powered Q&A generation, and file management, Scripter revolutionizes how you interact with recorded audio.
 
 ---
 
-## Team Members👦🏼👨🏼🧑🏿‍🦱
-- Agres, Zyrach Adrian
-- Guernaldo, Mardyson
-- Lejano, Nathaniel
-  
----
+## TEAM MEMBERS👦🏼👨🏼🧑🏿‍🦱  
 
-## TARGET END USERS🎯
-- This mobile application can benefit any users, especially students. With Scripter, students can take notes with ease, expand information, and generate a reviewer of sorts.
-- Individuals with hearing impairment can also benefit from Scripter where they can use the transcription feature of the application when conversing with others.
+Meet the team behind Scripter:  
+
+- **Agres, Zyrach Adrian** – Developer and Feature Integrator  
+- **Guernaldo, Mardyson** – UI/UX Designer and QA Tester  
+- **Lejano, Nathaniel** – Project Lead and Backend Specialist  
 
 ---
 
-## Features☑️
+## TARGET END USERS🎯  
 
-- **FIREBASE USER AUTHENTICATION**🔐
-  - Login
-  - Register
-  - Forget Password
-    
-- **MICROPHONE**🎙️
-  - Utilizes the device microphone to recognize and record real-time user speech.
-  - Bluetooth device microphones are also compatible to be used in the app. 
-  
-- **GEMINI AI API**🤖
-  - Integrates a GeminiAI API where certain functions sends prompts to the AI along with the recorded audio. In return, the AI sends back information based on the recorded speech.
-  
-- **FILE MANAGEMENT & ACCESSIBILITY**📁
-  - Recorded scripts are saved locally which can be viewed, edited, deleted, and transferred.
-  - The files have exclusive accessibility where users can only view the recordings they had saved.
-  
-- **BLUETOOTH CONNECTIVITY & FILE TRANSFER**🔵
-  - The mobile application can connect to a selected Bluetooth device and use its microphone to create recordings.
-  - Bluetooth is utilized when transferring recordings to other devices.
-  
-- **TEXT-TO-SPEECH**🔉
-  - When generating and viewing the scripts, a text-to-speech feature is available.
-  
-- **HANDS-FREE FUNCTIONALITY**🏖️
-  - The application's microphone can automatically be opened by just saying a keyword. 
-  
+Scripter is designed to serve a wide range of users:  
+
+### Students  
+- Simplifies note-taking during lectures or meetings.  
+- Generates summaries and study guides to support academic excellence.  
+
+### Accessibility Advocates  
+- Helps individuals with hearing impairments transcribe spoken conversations for better engagement.  
+
+### Professionals  
+- Ideal for transcribing meeting notes, interviews, or brainstorming sessions.  
+
+### Content Creators  
+- Provides a tool to convert ideas into written content quickly and effectively.  
+
 ---
+
+## FEATURES☑️  
+
+### **FIREBASE USER AUTHENTICATION**🔐  
+Securely access your personalized workspace:  
+- **Login**: Log in to access.  
+- **Register**: Sign up for a personalized account.  
+- **Forget Password**: Reset your password securely in case of loss.  
+
+### **MICROPHONE**🎙️  
+Audio recording:  
+- Real-time speech recognition using the device microphone.  
+- **Bluetooth Microphone Support**: Use external devices for added convenience.  
+
+### **GEMINI AI API**🤖  
+Smart AI integration to maximize productivity:  
+- Send recorded audio to GeminiAI for:  
+  - **Information Expansion**: Convert short notes into detailed text.  
+  - **Q&A Generation**: Create quizzes or discussion questions from your recordings.  
+
+### **FILE MANAGEMENT & ACCESSIBILITY**📁  
+Keep your recordings organized and secure:  
+- Save transcriptions as local files.  
+- View, edit, delete, or share recordings with ease.  
+- **Exclusive Access**: Only the recording creator can access and manage their files.  
+
+### **BLUETOOTH CONNECTIVITY & FILE TRANSFER**🔵  
+Go wireless for added flexibility:  
+- Connect to Bluetooth microphones for hands-free recording.  
+- Transfer recordings securely to other devices using Bluetooth.  
+
+### **TEXT-TO-SPEECH**🔉  
+Bring your scripts to life:  
+- Listen to generated transcriptions or summaries for convenient review.  
+
+### **HANDS-FREE FUNCTIONALITY**🏖️  
+Simplify recording on the go:  
+- Activate the microphone automatically with a user-defined keyword, ensuring a true hands-free experience.  
+
+---
+
+## TECH STACK⚙️  
+
+- **Programming Language**: Java (Android)  
+- **Backend**: Firebase Authentication  
+- **AI API**: GeminiAI API for advanced text processing  
+- **Data Storage**: Local file storage for secure and portable access  
+- **UI/UX Tools**: Material Design Components for a sleek and intuitive interface  
+
+Let’s create, transcribe, and transform together with Scripter!  
