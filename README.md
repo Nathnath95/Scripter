@@ -1,4 +1,5 @@
 # SCRIPTER✒️
+Scripter is your all-in-one Android application designed to transform your spoken words into meaningful and organized text. From transcription to study material creation, Scripter leverages cutting-edge technology to offer a seamless speech-to-text experience, along with tools to enhance learning, communication, and accessibility.
 
 ---
 
