@@ -85,4 +85,17 @@ Simplify recording on the go:
 - **Backend**: Firebase Authentication  
 - **AI API**: GeminiAI API for advanced text processing  
 - **Data Storage**: Local file storage for secure and portable access  
-- **UI/UX Tools**: Material Design Components for a sleek and intuitive interface  
+- **UI/UX Tools**: Material Design Components for a sleek and intuitive interface
+
+---
+
+## App Preview
+
+<img src="https://github.com/user-attachments/assets/0121281a-7d86-4653-9f93-712b3d3eecd9" alt="scripter_start" width="300">
+<img src="https://github.com/user-attachments/assets/2490602d-f520-4828-b56c-415bf79b4315" alt="scripter_login" width="300">
+<img src="https://github.com/user-attachments/assets/367c0767-79dc-4ceb-ab99-aa10d856a0db" alt="scripter_homeAction" width="300">
+<img src="https://github.com/user-attachments/assets/13062560-e392-4b22-864c-a89c67a805b4" alt="scripter_transcription" width="300">
+<img src="https://github.com/user-attachments/assets/e5260050-34de-48f0-b144-791f921da635" alt="scripter_list" width="300">
+<img src="https://github.com/user-attachments/assets/fe4439e4-831b-41d3-a980-542510211563" alt="scripter_viewRecording" width="300">
+
+
