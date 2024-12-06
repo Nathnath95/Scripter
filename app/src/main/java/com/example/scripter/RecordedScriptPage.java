@@ -50,7 +50,6 @@ public class RecordedScriptPage extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    // Set language once initialization is successful
                     int langResult = t1.setLanguage(Locale.CANADA);
                     if (langResult == TextToSpeech.LANG_MISSING_DATA
                             || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -58,19 +57,15 @@ public class RecordedScriptPage extends AppCompatActivity {
                     } else {
                         Log.d("TTS", "Language is set successfully");
 
-                        // Get the recorded script from the Intent
                         String recordedScript = getIntent().getStringExtra("RECORDED_SCRIPT");
                         Log.d("Test", "This is recorded: " + recordedScript);
 
-                        // Check if the recorded script is not null
                         if (recordedScript != null) {
-                            // Set the scriptTextView text and log the content
                             scriptTextView.setText(recordedScript);
                             String text = scriptTextView.getText().toString();
                             Log.d("Text", "Second");
                             Log.d("Text", text);
 
-                            // Speak the recorded script using TextToSpeech
                             t1.speak(recordedScript, TextToSpeech.QUEUE_FLUSH, null, null);
                         } else {
                             Log.e("TTS", "Recorded script is empty or null");

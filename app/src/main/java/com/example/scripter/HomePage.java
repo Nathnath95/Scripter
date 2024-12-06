@@ -154,8 +154,8 @@ public class HomePage extends AppCompatActivity {
                 if (matches != null && !matches.isEmpty()) {
                     String spokenText = matches.get(0).toLowerCase(Locale.ROOT);
                     if (spokenText.contains("yes")) {
-                        toggleMic(); // Call the toggleMic function when "Yes" is detected
-                    }             // Release the recognizer after usage
+                        toggleMic();
+                    }
                 }
             }
 
@@ -164,7 +164,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onEvent(int i, Bundle bundle) {}
         });
-        startInitialListening(); // Start listening immediately
+        startInitialListening();
     }
 
     private void startInitialListening() {
@@ -277,13 +277,12 @@ public class HomePage extends AppCompatActivity {
     // Bluetooth on method
     private void enableMethod() {
         if (ActivityCompat.checkSelfPermission(HomePage.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // Request required permissions
             ActivityCompat.requestPermissions(
                     HomePage.this,
                     new String[]{android.Manifest.permission.BLUETOOTH_CONNECT, android.Manifest.permission.BLUETOOTH_SCAN},
                     1 // PERMISSION_REQUEST_CODE
             );
-            return; // Exit to wait for user action
+            return;
         }
 
         if (myBluetoothAdapter == null) {
@@ -317,8 +316,6 @@ public class HomePage extends AppCompatActivity {
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
 
-        recordlinglistButton.setClickable(true);
-        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
@@ -349,8 +346,6 @@ public class HomePage extends AppCompatActivity {
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
 
-        recordlinglistButton.setClickable(true);
-        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
@@ -375,8 +370,6 @@ public class HomePage extends AppCompatActivity {
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
 
-        recordlinglistButton.setClickable(true);
-        recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
 
@@ -397,8 +390,8 @@ public class HomePage extends AppCompatActivity {
         isRecording = false;
         stopTimer();
         resetTimer();
-
         rippleBackground.stopRippleAnimation();
+        refreshActivity();
 
         micButton.setImageResource(R.drawable.mic_button_off);
         updateButtonsState(false);
@@ -407,6 +400,15 @@ public class HomePage extends AppCompatActivity {
         recordlinglistButton.setImageResource(R.drawable.recordinglist_button_states);
         bluetoothButton.setClickable(true);
         bluetoothButton.setImageResource(R.drawable.bluetooth_button_states);
+    }
+
+    private void refreshActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
     private void updateButtonsState(boolean isEnabled) {
@@ -487,10 +489,10 @@ public class HomePage extends AppCompatActivity {
 
     // Api
     public void modelCall(String text, String prompt) {
-        // Specify a Gemini model appropriate for your use case
+        String apiKey = System.getenv("GEMINI_API_KEY");
         GenerativeModel gm =
                 new GenerativeModel(
-                        "gemini-1.5-flash", "AIzaSyAVQnIs0KS3JF8G3-qQ32eBYthwHckb1K4");
+                        "gemini-1.5-flash", apiKey);
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content =
@@ -526,7 +528,6 @@ public class HomePage extends AppCompatActivity {
                             new Handler().postDelayed(() -> {
                                 Intent intent = new Intent(HomePage.this, RecordedScriptPage.class);
                                 Log.d("Text", promtText);
-                                //t1.speak(promtText, TextToSpeech.QUEUE_FLUSH, null);
                                 intent.putExtra("RECORDED_SCRIPT", promtText);
                                 startActivity(intent);
                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -611,7 +612,6 @@ public class HomePage extends AppCompatActivity {
                 }
             }, null);
         }
-        // End of companion trial
     }
 
     public void back(View view) {

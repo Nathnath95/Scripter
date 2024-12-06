@@ -89,7 +89,7 @@ public class ViewRecordingPage extends AppCompatActivity {
         }
 
         t1 = new TextToSpeech(this, i -> {
-            if (i != TextToSpeech.ERROR){
+            if (i != TextToSpeech.ERROR) {
                 t1.setLanguage(Locale.CANADA);
             } else {
                 Toast.makeText(this, "TextToSpeech initialization failed!", Toast.LENGTH_SHORT).show();
@@ -117,25 +117,20 @@ public class ViewRecordingPage extends AppCompatActivity {
                     File file = new File(Environment.getExternalStorageDirectory(), "Download/" + userId + "_" + file_name);
 
                     if (file.exists()) {
-                        // Use FileProvider to get a content URI
                         Uri fileUri = FileProvider.getUriForFile(ViewRecordingPage.this, "com.example.scripter.fileprovider", file);
 
-                        // Intent to send the file
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("application/pdf");
                         intent.putExtra(Intent.EXTRA_STREAM, fileUri);
 
-                        // Allow Bluetooth to handle the file
                         intent.setPackage("com.android.bluetooth");
 
                         try {
-                            // Start the intent to send the file via Bluetooth
                             startActivity(intent);
                         } catch (Exception e) {
                             Toast.makeText(ViewRecordingPage.this, "Error while sending file", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        // Inform the user if the file doesn't exist
                         Toast.makeText(ViewRecordingPage.this, "File not found", Toast.LENGTH_SHORT).show();
                     }
 
@@ -209,18 +204,6 @@ public class ViewRecordingPage extends AppCompatActivity {
         }, 1000);
     }
 
-//    private void deleteRecording(String recordingName) {
-//        File directory = getExternalFilesDir(null);
-//        if (directory != null) {
-//            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//            File file = new File(directory, userId + "_" + recordingName + ".txt");
-//            if (file.exists() && file.delete()) {
-//                Toast.makeText(this, "Recording deleted successfully!", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, "Failed to delete recording!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 
     private void playRecording(String recordingName) {
         File directory = getExternalFilesDir(null);
@@ -278,13 +261,21 @@ public class ViewRecordingPage extends AppCompatActivity {
             String originalName = getIntent().getStringExtra("RECORDING_NAME");
 
             if (!updatedName.equals(originalName)) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
                 File directory = getExternalFilesDir(null);
-                File originalFile = new File(directory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + originalName + ".txt");
-                File updatedFile = new File(directory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + updatedName + ".txt");
+                File originalFile = new File(directory, userId + "_" + originalName + ".txt");
+                File updatedFile = new File(directory, userId + "_" + updatedName + ".txt");
+
+                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File originalDownloadFile = new File(downloadsDir, userId + "_" + originalName + ".txt");
+                File updatedDownloadFile = new File(downloadsDir, userId + "_" + updatedName + ".txt");
 
                 if (originalFile.exists()) {
                     boolean renamed = originalFile.renameTo(updatedFile);
-                    if (renamed) {
+                    boolean downloadRenamed = originalDownloadFile.renameTo(updatedDownloadFile);
+
+                    if (renamed && downloadRenamed) {
                         getIntent().putExtra("RECORDING_NAME", updatedName);
                         Toast.makeText(this, "Recording name updated successfully!", Toast.LENGTH_SHORT).show();
                         String updatedScript = scriptTextView.getText().toString();
@@ -328,14 +319,19 @@ public class ViewRecordingPage extends AppCompatActivity {
             String updatedScript = scriptTextView.getText().toString();
             String recordingName = recordingNameTextView.getText().toString();
 
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             File directory = getExternalFilesDir(null);
-            if (directory != null) {
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                File file = new File(directory, userId + "_" + recordingName + ".txt");
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-                if (file.exists()) {
-                    try (FileWriter writer = new FileWriter(file, false)) {
+            if (directory != null) {
+                File file = new File(directory, userId + "_" + recordingName + ".txt");
+                File downloadFile = new File(downloadsDir, userId + "_" + recordingName + ".txt");
+
+                if (file.exists() && downloadFile.exists()) {
+                    try (FileWriter writer = new FileWriter(file, false);
+                         FileWriter downloadWriter = new FileWriter(downloadFile, false)) {
                         writer.write(updatedScript);
+                        downloadWriter.write(updatedScript);
                         Toast.makeText(this, "Recording script updated successfully!", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
