@@ -15,7 +15,8 @@ Scripter is an Android application that utilizes a microphone feature to recogni
 ---
 
 ## TARGET END USERS🎯
-This mobile application can benefit any users, especially students. With Scripter, students can take notes with ease, expand information, and generate a reviewer of sorts.
+- This mobile application can benefit any users, especially students. With Scripter, students can take notes with ease, expand information, and generate a reviewer of sorts.
+- Individuals with hearing impairment can also benefit from Scripter where they can use the transcription feature of the application when conversing with others.
 
 ---
 
