@@ -21,31 +21,29 @@ This mobile application can benefit any users, especially students. With Scripte
 
 ## Features
 - **FIREBASE USER AUTHENTICATION**
-  - gay
-  - balls
-  - 
+  - Login
+  - Register
+  - Forget Password
+    
 - **MICROPHONE**
-  -
-  -
+  - Utilizes the device microphone to recognize and record real-time user speech.
+  - Bluetooth device microphones are also compatible to be used in the app. 
   
 - **GEMINI AI API**
-  -a
-  -a
+  -Integrates a GeminiAI API where certain functions sends prompts to the AI along with the recorded audio. In return, the AI sends back information based on the recorded speech.
   
 - **FILE MANAGEMENT & ACCESSIBILITY**
-  -a
-  -a
+  -Recorded scripts are saved locally which can be viewed, edited, deleted, and transferred.
+  -The files have exclusive accessibility where users can only view the recordings they had saved.
   
 - **BLUETOOTH CONNECTIVITY & FILE TRANSFER**
-  -a
-  -a
+  -The mobile application can connect to a selected Bluetooth device and use its microphone to create recordings.
+  -Bluetooth is utilized when transferring recordings to other devices.
   
 - **TEXT-TO-SPEECH**
-  -a
-  -a
+  -When generating and viewing the scripts, a text-to-speech feature is available.
   
 - **HANDS-FREE FUNCTIONALITY**
-  -a
-  -a
+  - The application's microphone can automatically be opened by just saying a keyword. 
   
 ---
