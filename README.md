@@ -86,5 +86,3 @@ Simplify recording on the go:
 - **AI API**: GeminiAI API for advanced text processing  
 - **Data Storage**: Local file storage for secure and portable access  
 - **UI/UX Tools**: Material Design Components for a sleek and intuitive interface  
-
-Let’s create, transcribe, and transform together with Scripter!  
