@@ -1,22 +1,51 @@
-# Scripter
+# SCRIPTER
 
-Scripter is an Android application that allows users to record and manage speech recordings with AI-powered script generation capabilities using Bluetooth.
+---
+
+## OVERVIEW
+Scripter is an Android application that utilizes a microphone feature to recognize user speech. WIth Scripter, users can transcribe audio, expand information, and generate questions and answers based on the recorded speech.
+
+---
+
+## Team Members:
+- Agres, Zyrach Adrian
+- Guernaldo, Mardyson
+- Lejano, Nathaniel
+  
+---
+
+## TARGET END USERS
+This mobile application can benefit any users, especially students. With Scripter, students can take notes with ease, expand information, and generate a reviewer of sorts.
+
+---
 
 ## Features
-
-- **Speech Recognition**: Real-time speech-to-text conversion
-- **AI Script Generation**: Generates various types of scripts:
-  - 2-sentence summaries
-  - Q&A format
-  - Enhanced Summaries
-- **Recording Management**:
-  - Save recordings with custom file names
-  - View and edit saved recordings
-  - Delete recordings
-  - Share recordings via Bluetooth
-- **Text-to-Speech**: Playback capability for previously generated scripts
-- **User Authentication**: Firebase-based user management with:
-  - Email/password registration
-  - Login functionality
-  - Password recovery
-- **Bluetooth File Transfer**
+- **FIREBASE USER AUTHENTICATION**
+  - gay
+  - balls
+  - 
+- **MICROPHONE**
+  -
+  -
+  
+- **GEMINI AI API**
+  -a
+  -a
+  
+- **FILE MANAGEMENT & ACCESSIBILITY**
+  -a
+  -a
+  
+- **BLUETOOTH CONNECTIVITY & FILE TRANSFER**
+  -a
+  -a
+  
+- **TEXT-TO-SPEECH**
+  -a
+  -a
+  
+- **HANDS-FREE FUNCTIONALITY**
+  -a
+  -a
+  
+---
