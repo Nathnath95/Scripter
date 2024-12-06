@@ -15,7 +15,7 @@ Scripter is an innovative Android app that uses speech recognition technology to
 Meet the team behind Scripter:  
 
 - **Agres, Zyrach Adrian** 
-- **Guernaldo, Mardyson**
+- **Guernaldo, Mardyson Justin**
 - **Lejano, Nathaniel**  
 
 ---
