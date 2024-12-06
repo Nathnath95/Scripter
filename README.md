@@ -8,6 +8,11 @@ Scripter is your all-in-one Android application designed to transform your spoke
 
 Scripter is an innovative Android app that uses speech recognition technology to transcribe audio into text. Whether you are a student needing to take quick notes, someone aiming to create detailed summaries, or an individual looking to enhance accessibility, Scripter has got you covered. With features like information expansion, AI-powered Q&A generation, and file management, Scripter revolutionizes how you interact with recorded audio.
 
+From the past activities, Scripter included several functions such as:
+- Firebase user authentication (Login, Register, Forget Password)
+- Bluetooth connectability
+- Bluetooth file transfer
+
 ---
 
 ## TEAM MEMBERS👦🏼👨🏼🧑🏿‍🦱  
