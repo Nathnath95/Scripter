@@ -10,7 +10,7 @@ Scripter is an innovative Android app that uses speech recognition technology to
 
 ---
 
-## TEAM MEMBERS👦🏼👨🏼🧑🏿‍🦱  
+## TEAM MEMBERS
 
 Meet the team behind Scripter:  
 
